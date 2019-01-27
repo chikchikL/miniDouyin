@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <SurfaceView
+            android:id="@+id/img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_record_tag"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/ic_launcher"
+                android:layout_gravity="center|top"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_toRightOf="@id/iv_record_tag"
+                android:layout_alignTop="@id/iv_record_tag"
+                android:textSize="20sp"
+                android:text="录制时间：0s"
+                android:textColor="#fff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+    </FrameLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_record"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:text="record" />
+
+        <Button
+            android:id="@+id/btn_facing"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:text="facing" />
+
+        <Button
+            android:id="@+id/btn_zoom"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:text="zoom" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

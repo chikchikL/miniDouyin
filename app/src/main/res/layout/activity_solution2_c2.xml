@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VideoListActivity">
+    tools:context=".activity.VideoListActivity">
 
     <LinearLayout
         android:id="@+id/ll"
@@ -21,6 +21,14 @@
             android:layout_weight="1"
             android:text="@string/select_an_image"
         />
+        <Button
+            android:id="@+id/btn_record"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:layout_weight="1"
+            android:text="@string/record_video"
+            />
 
         <Button
             android:id="@+id/btn_refresh"
@@ -28,7 +36,6 @@
             android:layout_height="match_parent"
             android:layout_margin="16dp"
             android:layout_weight="1"
-            android:onClick="fetchFeed"
             android:text="@string/refresh_feed"
         />
     </LinearLayout>

@@ -1,4 +1,4 @@
-package com.bytedance.minidouyin;
+package com.bytedance.minidouyin.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -12,8 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.bytedance.minidouyin.adapter.VideoListAdapter.FeedViewHolder;
+import com.bytedance.minidouyin.R;
 import com.bytedance.minidouyin.adapter.VideoListAdapter;
+import com.bytedance.minidouyin.adapter.VideoListAdapter.FeedViewHolder;
 import com.bytedance.minidouyin.bean.Feed;
 import com.bytedance.minidouyin.bean.FeedResponse;
 import com.bytedance.minidouyin.bean.PostVideoResponse;
@@ -21,7 +22,6 @@ import com.bytedance.minidouyin.newtork.IMiniDouyinService;
 import com.bytedance.minidouyin.newtork.RetrofitManager;
 import com.bytedance.minidouyin.utils.ResourceUtils;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
-import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class VideoListActivity extends AppCompatActivity implements VideoListAdapter.OnFeedItemClickListener{
+public class VideoListActivity extends AppCompatActivity implements View.OnClickListener,VideoListAdapter.OnFeedItemClickListener{
 
     private static final int PICK_IMAGE = 1;
     private static final int PICK_VIDEO = 2;
@@ -54,7 +54,7 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     private Uri mSelectedVideo;
     public Button mBtn;
     private Button mBtnRefresh;
-    private OrientationUtils orientationUtils;
+    private Button mBtnRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,28 +64,21 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         initBtns();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //首次进入页面后主动刷新一次数据
+        fetchFeed();
+    }
+
     private void initBtns() {
         mBtn = findViewById(R.id.btn);
-        mBtn.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                String s = mBtn.getText().toString();
-                if (getString(R.string.select_an_image).equals(s)) {
-                    chooseImage();
-                } else if (getString(R.string.select_a_video).equals(s)) {
-                    chooseVideo();
-                } else if (getString(R.string.post_it).equals(s)) {
-                    if (mSelectedVideo != null && mSelectedImage != null) {
-                        postVideo();
-                    } else {
-                        throw new IllegalArgumentException("error data uri, mSelectedVideo = " + mSelectedVideo + ", mSelectedImage = " + mSelectedImage);
-                    }
-                } else if ((getString(R.string.success_try_refresh).equals(s))) {
-                    mBtn.setText(R.string.select_an_image);
-                }
-            }
-        });
-
         mBtnRefresh = findViewById(R.id.btn_refresh);
+        mBtnRecord = findViewById(R.id.btn_record);
+
+        mBtn.setOnClickListener(this);
+        mBtnRefresh.setOnClickListener(this);
+        mBtnRecord.setOnClickListener(this);
     }
 
     private void initRecyclerView() {
@@ -218,11 +211,10 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
     protected void onDestroy() {
         super.onDestroy();
         GSYVideoManager.releaseAllVideos();
-        if (orientationUtils != null)
-            orientationUtils.releaseListener();
+
     }
 
-    public void fetchFeed(View view) {
+    public void fetchFeed() {
         mBtnRefresh.setText("requesting...");
         mBtnRefresh.setEnabled(false);
 
@@ -270,6 +262,46 @@ public class VideoListActivity extends AppCompatActivity implements VideoListAda
         Feed feed = mFeeds.get(index);
         intent.putExtra(DetailPlayerActivity.FEED_VIDEO_URL,feed.getVideoUrl());
         intent.putExtra(DetailPlayerActivity.FEED_COVER_URL,feed.getImgUrl());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn:
+                String s = mBtn.getText().toString();
+                if (getString(R.string.select_an_image).equals(s)) {
+                    chooseImage();
+                } else if (getString(R.string.select_a_video).equals(s)) {
+                    chooseVideo();
+                } else if (getString(R.string.post_it).equals(s)) {
+                    if (mSelectedVideo != null && mSelectedImage != null) {
+                        postVideo();
+                    } else {
+                        throw new IllegalArgumentException("error data uri, mSelectedVideo = " + mSelectedVideo + ", mSelectedImage = " + mSelectedImage);
+                    }
+                } else if ((getString(R.string.success_try_refresh).equals(s))) {
+                    mBtn.setText(R.string.select_an_image);
+                }
+
+                break;
+
+            case R.id.btn_refresh:
+                //刷新数据
+                fetchFeed();
+                break;
+
+            case R.id.btn_record:
+                //跳转到视频录制
+                jump2Record();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void jump2Record() {
+        Intent intent = new Intent(this, RecordActivity.class);
         startActivity(intent);
     }
 }

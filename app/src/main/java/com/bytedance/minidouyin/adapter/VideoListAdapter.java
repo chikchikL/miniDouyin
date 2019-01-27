@@ -12,9 +12,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bytedance.minidouyin.R;
-import com.bytedance.minidouyin.VideoListActivity;
 import com.bytedance.minidouyin.bean.Feed;
-import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.util.List;
@@ -81,20 +79,11 @@ public class VideoListAdapter extends RecyclerView.Adapter{
                 .into(imageView);
         player.setThumbImageView(imageView);
         //增加title
-        player.getTitleTextView().setVisibility(View.VISIBLE);
+        player.getTitleTextView().setVisibility(View.GONE);
         //设置返回键
-        player.getBackButton().setVisibility(View.VISIBLE);
-        //设置旋转
-        OrientationUtils orientationUtils = new OrientationUtils((VideoListActivity)mContext, player);
-        //设置全屏按键功能,这是使用的是选择屏幕，而不是全屏
-        player.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                orientationUtils.resolveByClick();
-            }
-        });
+        player.getBackButton().setVisibility(View.GONE);
         //是否可以滑动调整
-        player.setIsTouchWiget(true);
+        player.setIsTouchWiget(false);
     }
 
 

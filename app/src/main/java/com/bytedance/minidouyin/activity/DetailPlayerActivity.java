@@ -1,4 +1,4 @@
-package com.bytedance.minidouyin;
+package com.bytedance.minidouyin.activity;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bytedance.minidouyin.R;
 import com.shuyu.gsyvideoplayer.GSYBaseActivityDetail;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
