@@ -30,7 +30,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="16dp"
-            android:background="@drawable/ic_file"/>
+            android:background="@drawable/add_picture"/>
 
         <Button
             android:id="@+id/btn_record"

@@ -84,6 +84,7 @@ public class VideoListAdapter extends RecyclerView.Adapter{
         player.getBackButton().setVisibility(View.GONE);
         //是否可以滑动调整
         player.setIsTouchWiget(false);
+
     }
 
 

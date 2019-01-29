@@ -160,11 +160,13 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
                 mSelectedImage = data.getData();
                 Log.d(TAG, "selectedImage = " + mSelectedImage);
                 str_id = R.string.select_a_video;
+                findViewById(R.id.btn).setBackgroundResource(R.drawable.add_video);
                 Toast.makeText(this,"请选择视频",Toast.LENGTH_SHORT).show();
             } else if (requestCode == PICK_VIDEO) {
                 mSelectedVideo = data.getData();
                 Log.d(TAG, "mSelectedVideo = " + mSelectedVideo);
                 str_id = R.string.post_it;
+                findViewById(R.id.btn).setBackgroundResource(R.drawable.icon_release);
                 Toast.makeText(this,"请上传",Toast.LENGTH_SHORT).show();
             }
         }
@@ -197,13 +199,21 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
 
                 if(body!=null && body.isResult()){
                     Toast.makeText(VideoListActivity.this,"success",Toast.LENGTH_SHORT).show();
+                    mBtn.setBackgroundResource(R.drawable.add_picture);
+                    str_id = R.string.select_an_image;
+                    mBtn.setEnabled(true);
                 }
+
+
 
             }
 
             @Override
             public void onFailure(Call<PostVideoResponse> call, Throwable t) {
                 Toast.makeText(VideoListActivity.this,"failure",Toast.LENGTH_SHORT).show();
+                mBtn.setBackgroundResource(R.drawable.add_picture);
+                str_id = R.string.select_an_image;
+                mBtn.setEnabled(true);
             }
         });
 
