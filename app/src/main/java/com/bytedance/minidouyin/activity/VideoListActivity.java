@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -55,11 +56,12 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
     public Button mBtn;
     private Button mBtnRefresh;
     private Button mBtnRecord;
+    private SwipeRefreshLayout mSrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_solution2_c2);
+        setContentView(R.layout.activity_video_list);
         initRecyclerView();
         initBtns();
     }
@@ -83,6 +85,8 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
 
     private void initRecyclerView() {
         mRv = findViewById(R.id.rv);
+        mSrl = findViewById(R.id.srl);
+
         mRv.setLayoutManager(new LinearLayoutManager(this));
         //设置滑动监听器，播放第一个完整可见的player
         mRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -107,6 +111,10 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
             }
         });
         mRv.setAdapter(new VideoListAdapter(mFeeds,this));
+        mSrl.setOnRefreshListener(() -> {
+            //下拉加载更多
+            fetchFeed();
+        });
     }
 
     /**
@@ -230,6 +238,7 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
                 //刷新列表数据
                 ((VideoListAdapter)mRv.getAdapter()).refreshData(mFeeds);
 
+                mSrl.setRefreshing(false);
                 //每次刷新完成后重置列表位置
                 mRv.scrollToPosition(0);
 
@@ -240,6 +249,7 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onFailure(Call<FeedResponse> call, Throwable t) {
                 resetRefreshBtn();
+                mSrl.setRefreshing(false);
             }
         });
 
