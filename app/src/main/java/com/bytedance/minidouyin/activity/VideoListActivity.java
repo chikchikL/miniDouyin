@@ -54,9 +54,9 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
     public Uri mSelectedImage;
     private Uri mSelectedVideo;
     public Button mBtn;
-    private Button mBtnRefresh;
     private Button mBtnRecord;
     private SwipeRefreshLayout mSrl;
+    private int str_id = R.string.select_an_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +75,9 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
 
     private void initBtns() {
         mBtn = findViewById(R.id.btn);
-        mBtnRefresh = findViewById(R.id.btn_refresh);
         mBtnRecord = findViewById(R.id.btn_record);
 
         mBtn.setOnClickListener(this);
-        mBtnRefresh.setOnClickListener(this);
         mBtnRecord.setOnClickListener(this);
     }
 
@@ -139,7 +137,6 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
         }
     }
     public void chooseImage() {
-        // TODO-C2 (4) Start Activity to select an image
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -147,8 +144,6 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void chooseVideo() {
-        // TODO-C2 (5) Start Activity to select a video
-
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(Intent.createChooser(intent,"Select Video"), PICK_VIDEO);
     }
@@ -164,11 +159,13 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
             if (requestCode == PICK_IMAGE) {
                 mSelectedImage = data.getData();
                 Log.d(TAG, "selectedImage = " + mSelectedImage);
-                mBtn.setText(R.string.select_a_video);
+                str_id = R.string.select_a_video;
+                Toast.makeText(this,"请选择视频",Toast.LENGTH_SHORT).show();
             } else if (requestCode == PICK_VIDEO) {
                 mSelectedVideo = data.getData();
                 Log.d(TAG, "mSelectedVideo = " + mSelectedVideo);
-                mBtn.setText(R.string.post_it);
+                str_id = R.string.post_it;
+                Toast.makeText(this,"请上传",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -181,10 +178,8 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void postVideo() {
-        mBtn.setText("POSTING...");
         mBtn.setEnabled(false);
 
-        // TODO-C2 (6) Send Request to post a video with its cover image
         // if success, make a text Toast and show
         Retrofit retrofit = RetrofitManager.get(BASE_URL);
 
@@ -209,7 +204,6 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onFailure(Call<PostVideoResponse> call, Throwable t) {
                 Toast.makeText(VideoListActivity.this,"failure",Toast.LENGTH_SHORT).show();
-                resetRefreshBtn();
             }
         });
 
@@ -223,9 +217,6 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void fetchFeed() {
-        mBtnRefresh.setText("requesting...");
-        mBtnRefresh.setEnabled(false);
-
         // if success, assign data to mFeeds and call mRv.getAdapter().notifyDataSetChanged()
         // don't forget to call resetRefreshBtn() after response received
         Retrofit retrofit = RetrofitManager.get(BASE_URL);
@@ -238,26 +229,25 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
                 //刷新列表数据
                 ((VideoListAdapter)mRv.getAdapter()).refreshData(mFeeds);
 
-                mSrl.setRefreshing(false);
+
                 //每次刷新完成后重置列表位置
                 mRv.scrollToPosition(0);
 
                 Log.i(TAG, "onResponse: 视频个数----"+mFeeds.size());
-                resetRefreshBtn();
+
+                //停止刷新
+                if(mSrl.isRefreshing())
+                    mSrl.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<FeedResponse> call, Throwable t) {
-                resetRefreshBtn();
-                mSrl.setRefreshing(false);
+                //停止刷新
+                if(mSrl.isRefreshing())
+                    mSrl.setRefreshing(false);
             }
         });
 
-    }
-
-    private void resetRefreshBtn() {
-        mBtnRefresh.setText(R.string.refresh_feed);
-        mBtnRefresh.setEnabled(true);
     }
 
     /**
@@ -279,7 +269,7 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn:
-                String s = mBtn.getText().toString();
+                String s = getString(str_id);
                 if (getString(R.string.select_an_image).equals(s)) {
                     chooseImage();
                 } else if (getString(R.string.select_a_video).equals(s)) {
@@ -294,11 +284,6 @@ public class VideoListActivity extends AppCompatActivity implements View.OnClick
                     mBtn.setText(R.string.select_an_image);
                 }
 
-                break;
-
-            case R.id.btn_refresh:
-                //刷新数据
-                fetchFeed();
                 break;
 
             case R.id.btn_record:

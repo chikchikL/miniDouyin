@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,35 +19,25 @@
 
     <LinearLayout
         android:id="@+id/ll"
-        android:layout_width="match_parent"
-        android:layout_height="92dp"
-        android:orientation="horizontal">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="horizontal"
+        android:background="#88b8e4b8">
 
         <Button
             android:id="@+id/btn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_margin="16dp"
-            android:layout_weight="1"
-            android:text="@string/select_an_image"
-            />
-        <Button
-            android:id="@+id/btn_record"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:layout_weight="1"
-            android:text="@string/record_video"
-            />
+            android:background="@drawable/ic_file"/>
 
         <Button
-            android:id="@+id/btn_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/btn_record"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_margin="16dp"
-            android:layout_weight="1"
-            android:text="@string/refresh_feed"
-            />
+            android:background="@drawable/ic_add"/>
     </LinearLayout>
 
 
